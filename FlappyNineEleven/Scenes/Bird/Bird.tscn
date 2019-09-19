@@ -1,0 +1,56 @@
+[gd_scene load_steps=11 format=2]
+
+[ext_resource path="res://Scenes/Bird/Bird.gd" type="Script" id=1]
+[ext_resource path="res://Scenes/Bird/Bird.tres" type="Animation" id=2]
+[ext_resource path="res://Art/Flying/plane.png" type="Texture" id=3]
+[ext_resource path="res://Art/Hit/frame-1.png" type="Texture" id=4]
+[ext_resource path="res://Art/Hit/frame-2.png" type="Texture" id=5]
+[ext_resource path="res://Art/Hit/frame-3.png" type="Texture" id=6]
+[ext_resource path="res://Art/Hit/frame-4.png" type="Texture" id=7]
+[ext_resource path="res://Art/Hit/frame-5.png" type="Texture" id=8]
+[ext_resource path="res://Audio/Sounds/splat.wav" type="AudioStream" id=9]
+
+[sub_resource type="SpriteFrames" id=1]
+animations = [ {
+"frames": [ ExtResource( 3 ) ],
+"loop": false,
+"name": "fly",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 4 ), ExtResource( 5 ), ExtResource( 6 ), ExtResource( 7 ), ExtResource( 8 ) ],
+"loop": true,
+"name": "hit",
+"speed": 10.0
+} ]
+
+[node name="Bird" type="Area2D"]
+position = Vector2( 154.207, 332.045 )
+input_pickable = false
+linear_damp = -1.0
+angular_damp = -1.0
+collision_mask = 18
+script = ExtResource( 1 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/flying = ExtResource( 2 )
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+position = Vector2( 30.7177, -9.29255 )
+scale = Vector2( 0.099826, 0.099826 )
+frames = SubResource( 1 )
+animation = "fly"
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+visible = false
+position = Vector2( -262.602, -323.159 )
+scale = Vector2( 0.953737, 0.953737 )
+polygon = PoolVector2Array( 299.662, 330.828, 303.731, 330.947, 326.047, 330.947, 346.62, 330.947, 357.603, 331.383, 364.751, 333.127, 368.674, 335.742, 372.615, 338.556, 369.822, 340.445, 366.731, 341.7, 365.572, 343.246, 362.939, 344.112, 360.692, 346.858, 355.527, 343.053, 341.618, 343.149, 335.629, 346.723, 322.674, 346.921, 312.249, 348.419, 308.778, 343.729, 299.119, 343.246, 286.491, 342.801, 280.186, 341.802, 271.259, 339.679, 265.329, 337.869, 258.774, 335.309, 257.613, 333.312, 243.317, 330.128, 259.486, 331.314, 257.925, 322.512, 255.615, 309.739, 260.11, 309.926, 273.781, 326.656, 280.836, 329.59, 286.392, 330.839, 284.207, 325.096, 286.516, 325.345, 290.652, 330.714 )
+
+[node name="RotationBeginTimout" type="Timer" parent="."]
+wait_time = 0.75
+
+[node name="CrashSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 9 )
+volume_db = -25.0
+[connection signal="area_entered" from="." to="." method="_on_Bird_area_entered"]
+[connection signal="timeout" from="RotationBeginTimout" to="." method="_on_RotationBeginTimout_timeout"]
